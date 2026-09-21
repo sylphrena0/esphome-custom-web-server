@@ -22,7 +22,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Read ESPHome version
+        id: esphome
+        run: echo "version=$(yq -p toml -oy '.package[] | select(.name == "esphome") | .version' pdm.lock)" >> "$GITHUB_OUTPUT"
+
       - name: Build ${{ matrix.config }}
         uses: esphome/build-action@v8.1.0
         with:
           yaml-file: ${{ matrix.config }}
+          version: ${{ steps.esphome.outputs.version }}
