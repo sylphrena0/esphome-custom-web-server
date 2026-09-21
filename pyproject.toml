@@ -1,0 +1,30 @@
+[project]
+name = "esphome-custom-web-server"
+version = "0.1.0"
+description = "ESPHome component that serves a custom web page"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "esphome~=2026.9.0",
+    "ruff",
+]
+
+[tool.pdm]
+distribution = false
+
+[tool.pyright]
+# esphome ships no type information :/
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["esphome"]
+combine-as-imports = true
+split-on-trailing-comma = false

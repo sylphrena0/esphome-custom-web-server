@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - tests/esp32-idf.yaml
+          - tests/esp8266.yaml
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build ${{ matrix.config }}
+        uses: esphome/build-action@v8.1.0
+        with:
+          yaml-file: ${{ matrix.config }}

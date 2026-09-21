@@ -1,0 +1,21 @@
+wifi:
+  ssid: test-ssid
+  password: test-password
+
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [custom_web_server]
+
+custom_web_server:
+  - path: /
+    html: index.html
+  - path: /remote
+    title: Remote UI
+    js_url: https://cdn.jsdelivr.net/npm/example-ui@1.0.0/dist/app.js
+    css_url: https://cdn.jsdelivr.net/npm/example-ui@1.0.0/dist/style.css
+    body: <esp-app></esp-app>
+  - path: /public
+    auth: false
+    html: index.html

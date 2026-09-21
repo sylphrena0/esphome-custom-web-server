@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - pyproject.toml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # pyproject.toml can change without a version bump, so only release versions without a tag
+      - name: Read version
+        id: version
+        run: |
+          tag="v$(yq -p toml -oy '.project.version' pyproject.toml)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
+            echo "$tag already exists, skipping release"
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build changelog
+        if: steps.version.outputs.new == 'true'
+        id: changelog
+        uses: ardalanamini/auto-changelog@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-name: ${{ steps.version.outputs.tag }}
+          default-commit-type: Other Changes
+          commit-types: |
+            feat: Features
+            fix: Bug Fixes
+            perf: Performance Improvements
+            revert: Reverts
+            refactor: Refactoring
+            docs: Documentation
+            style: Code Style
+            test: Tests
+            build: Build System & Dependencies
+            ci: Continuous Integration
+            chore: Chores
+
+      - name: Create GitHub release
+        if: steps.version.outputs.new == 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          target_commitish: ${{ github.sha }}
+
+      - name: Get major version tag
+        if: steps.version.outputs.new == 'true'
+        id: major_tag
+        run: echo "tag=$(echo '${{ steps.version.outputs.tag }}' | cut -d. -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Move floating major version tag
+        if: steps.version.outputs.new == 'true'
+        uses: EndBug/latest-tag@v1
+        with:
+          ref: ${{ steps.major_tag.outputs.tag }}
