@@ -7,15 +7,7 @@ from typing import Any
 from esphome import codegen, config_validation, external_files, final_validate
 from esphome.components import web_server_base
 from esphome.components.web_server_base import CONF_WEB_SERVER_BASE_ID
-from esphome.const import (
-    CONF_AUTH,
-    CONF_CSS_URL,
-    CONF_ID,
-    CONF_JS_URL,
-    CONF_LOCAL,
-    CONF_PATH,
-    CONF_RAW_DATA_ID,
-)
+from esphome.const import CONF_AUTH, CONF_CSS_URL, CONF_ID, CONF_JS_URL, CONF_LOCAL, CONF_PATH, CONF_RAW_DATA_ID
 
 DOMAIN = "custom_web_server"
 
