@@ -1,6 +1,6 @@
 # ESPHome Custom Web Server
 
-[![Tested with ESPHome version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsylphrena0%2Fesphome-custom-web-server%2Fmain%2Fpyproject.toml&query=%24%5B%27dependency-groups%27%5D.dev%5B0%5D&label=tested%20with&logo=esphome)](pyproject.toml)
+[![Supports ESPHome](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsylphrena0%2Fesphome-custom-web-server%2Fmain%2Fpyproject.toml&search=esphome%5B~%3D%3E%3C%5D%2B%28%5B0-9.%5D%2B%29&replace=%241&label=Targets%20ESPHome&logo=esphome)](pyproject.toml)
 
 An [ESPHome external component](https://esphome.io/components/external_components.html) that serves your own web page at a path on the device's HTTP server, next to (or instead of) the stock [`web_server`](https://esphome.io/components/web_server.html) UI.
 
