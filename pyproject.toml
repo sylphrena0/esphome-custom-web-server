@@ -1,6 +1,6 @@
 [project]
 name = "esphome-custom-web-server"
-version = "0.1.0"
+version = "0.1.1"
 description = "ESPHome component that serves a custom web page"
 requires-python = ">=3.12,<3.15"
 dependencies = []
