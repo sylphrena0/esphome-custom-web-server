@@ -26,6 +26,9 @@ jobs:
         run: |
           tag="v$(yq -p toml -oy '.project.version' pyproject.toml)"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          esphome="$(yq -p toml -oy '.["dependency-groups"].dev[]' pyproject.toml \
+            | sed -n 's/^esphome[~=><]\+\([0-9.]\+\)$/\1/p')"
+          echo "esphome=$esphome" >> "$GITHUB_OUTPUT"
           if git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
             echo "$tag already exists, skipping release"
             echo "new=false" >> "$GITHUB_OUTPUT"
@@ -60,7 +63,10 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.tag }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          body: |
+            [![Targets ESPHome Version ${{ steps.version.outputs.esphome }}](https://img.shields.io/badge/Targets%20ESPHome-${{ steps.version.outputs.esphome }}-blue?logo=esphome)](https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.tag }}/pyproject.toml)
+
+            ${{ steps.changelog.outputs.changelog }}
           target_commitish: ${{ github.sha }}
 
       - name: Get major version tag
